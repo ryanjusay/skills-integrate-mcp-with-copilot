@@ -4,6 +4,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const signupForm = document.getElementById("signup-form");
   const messageDiv = document.getElementById("message");
 
+  // Initialize Leaflet map centered on Mergington High School campus
+  const map = L.map("map").setView([34.0525, -118.2435], 17);
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  }).addTo(map);
+
   // Function to fetch activities from API
   async function fetchActivities() {
     try {
@@ -12,6 +18,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Clear loading message
       activitiesList.innerHTML = "";
+
+      // Remove existing markers before re-adding
+      map.eachLayer((layer) => {
+        if (layer instanceof L.Marker) {
+          map.removeLayer(layer);
+        }
+      });
 
       // Populate activities list
       Object.entries(activities).forEach(([name, details]) => {
@@ -41,6 +54,7 @@ document.addEventListener("DOMContentLoaded", () => {
           <h4>${name}</h4>
           <p>${details.description}</p>
           <p><strong>Schedule:</strong> ${details.schedule}</p>
+          <p><strong>Host:</strong> ${details.host}</p>
           <p><strong>Availability:</strong> ${spotsLeft} spots left</p>
           <div class="participants-container">
             ${participantsHTML}
@@ -54,6 +68,21 @@ document.addEventListener("DOMContentLoaded", () => {
         option.value = name;
         option.textContent = name;
         activitySelect.appendChild(option);
+
+        // Add map marker with info window popup
+        if (details.location) {
+          const marker = L.marker([details.location.lat, details.location.lng]);
+          const popupContent = `
+            <div class="map-popup">
+              <h4>${name}</h4>
+              <p><strong>Date/Time:</strong> ${details.schedule}</p>
+              <p><strong>Host:</strong> ${details.host}</p>
+              <p><strong>Description:</strong> ${details.description}</p>
+            </div>
+          `;
+          marker.bindPopup(popupContent);
+          marker.addTo(map);
+        }
       });
 
       // Add event listeners to delete buttons
