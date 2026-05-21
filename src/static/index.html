@@ -28,6 +28,18 @@
             <label for="email">Student Email:</label>
             <input type="email" id="email" required placeholder="your-email@mergington.edu" />
           </div>
+          <div class="form-group location-search-group">
+            <label for="location-search">Filter by Location:</label>
+            <div class="autocomplete-wrapper">
+              <input
+                type="text"
+                id="location-search"
+                placeholder="Search for a location..."
+                autocomplete="off"
+              />
+              <ul id="location-suggestions" class="autocomplete-list hidden"></ul>
+            </div>
+          </div>
           <div class="form-group">
             <label for="activity">Select Activity:</label>
             <select id="activity" required>
