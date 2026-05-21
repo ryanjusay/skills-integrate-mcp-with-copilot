@@ -3,6 +3,18 @@ document.addEventListener("DOMContentLoaded", () => {
   const activitySelect = document.getElementById("activity");
   const signupForm = document.getElementById("signup-form");
   const messageDiv = document.getElementById("message");
+  const eventMap = document.getElementById("event-map");
+
+  function getEventTypeClass(eventType) {
+    const typeMap = {
+      Academic: "academic",
+      Sports: "sports",
+      Nightlife: "nightlife",
+      Misc: "misc",
+    };
+
+    return typeMap[eventType] || "misc";
+  }
 
   // Function to fetch activities from API
   async function fetchActivities() {
@@ -12,6 +24,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Clear loading message
       activitiesList.innerHTML = "";
+      eventMap.innerHTML = "";
+      activitySelect.innerHTML =
+        '<option value="">-- Select an activity --</option>';
 
       // Populate activities list
       Object.entries(activities).forEach(([name, details]) => {
@@ -40,6 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
         activityCard.innerHTML = `
           <h4>${name}</h4>
           <p>${details.description}</p>
+          <p><strong>Type:</strong> ${details.event_type || "Misc"}</p>
           <p><strong>Schedule:</strong> ${details.schedule}</p>
           <p><strong>Availability:</strong> ${spotsLeft} spots left</p>
           <div class="participants-container">
@@ -54,6 +70,15 @@ document.addEventListener("DOMContentLoaded", () => {
         option.value = name;
         option.textContent = name;
         activitySelect.appendChild(option);
+
+        const marker = document.createElement("span");
+        marker.className = `map-marker ${getEventTypeClass(
+          details.event_type
+        )}`;
+        marker.style.left = `${details.map_location?.x ?? 50}%`;
+        marker.style.top = `${details.map_location?.y ?? 50}%`;
+        marker.title = `${name} (${details.event_type || "Misc"})`;
+        eventMap.appendChild(marker);
       });
 
       // Add event listeners to delete buttons

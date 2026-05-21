@@ -23,54 +23,72 @@ app.mount("/static", StaticFiles(directory=os.path.join(Path(__file__).parent,
 activities = {
     "Chess Club": {
         "description": "Learn strategies and compete in chess tournaments",
+        "event_type": "Academic",
+        "map_location": {"x": 18, "y": 22},
         "schedule": "Fridays, 3:30 PM - 5:00 PM",
         "max_participants": 12,
         "participants": ["michael@mergington.edu", "daniel@mergington.edu"]
     },
     "Programming Class": {
         "description": "Learn programming fundamentals and build software projects",
+        "event_type": "Academic",
+        "map_location": {"x": 36, "y": 30},
         "schedule": "Tuesdays and Thursdays, 3:30 PM - 4:30 PM",
         "max_participants": 20,
         "participants": ["emma@mergington.edu", "sophia@mergington.edu"]
     },
     "Gym Class": {
         "description": "Physical education and sports activities",
+        "event_type": "Sports",
+        "map_location": {"x": 70, "y": 38},
         "schedule": "Mondays, Wednesdays, Fridays, 2:00 PM - 3:00 PM",
         "max_participants": 30,
         "participants": ["john@mergington.edu", "olivia@mergington.edu"]
     },
     "Soccer Team": {
         "description": "Join the school soccer team and compete in matches",
+        "event_type": "Sports",
+        "map_location": {"x": 78, "y": 62},
         "schedule": "Tuesdays and Thursdays, 4:00 PM - 5:30 PM",
         "max_participants": 22,
         "participants": ["liam@mergington.edu", "noah@mergington.edu"]
     },
     "Basketball Team": {
         "description": "Practice and play basketball with the school team",
+        "event_type": "Sports",
+        "map_location": {"x": 62, "y": 52},
         "schedule": "Wednesdays and Fridays, 3:30 PM - 5:00 PM",
         "max_participants": 15,
         "participants": ["ava@mergington.edu", "mia@mergington.edu"]
     },
     "Art Club": {
         "description": "Explore your creativity through painting and drawing",
+        "event_type": "Misc",
+        "map_location": {"x": 44, "y": 64},
         "schedule": "Thursdays, 3:30 PM - 5:00 PM",
         "max_participants": 15,
         "participants": ["amelia@mergington.edu", "harper@mergington.edu"]
     },
     "Drama Club": {
         "description": "Act, direct, and produce plays and performances",
+        "event_type": "Nightlife",
+        "map_location": {"x": 30, "y": 72},
         "schedule": "Mondays and Wednesdays, 4:00 PM - 5:30 PM",
         "max_participants": 20,
         "participants": ["ella@mergington.edu", "scarlett@mergington.edu"]
     },
     "Math Club": {
         "description": "Solve challenging problems and participate in math competitions",
+        "event_type": "Academic",
+        "map_location": {"x": 24, "y": 46},
         "schedule": "Tuesdays, 3:30 PM - 4:30 PM",
         "max_participants": 10,
         "participants": ["james@mergington.edu", "benjamin@mergington.edu"]
     },
     "Debate Team": {
         "description": "Develop public speaking and argumentation skills",
+        "event_type": "Academic",
+        "map_location": {"x": 52, "y": 24},
         "schedule": "Fridays, 4:00 PM - 5:30 PM",
         "max_participants": 12,
         "participants": ["charlotte@mergington.edu", "henry@mergington.edu"]
