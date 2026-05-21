@@ -157,4 +157,174 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Initialize app
   fetchActivities();
+
+  // ---- Events Map ----
+  const map = L.map("map").setView([37.7749, -122.4194], 12);
+
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    attribution:
+      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+  }).addTo(map);
+
+  const eventMarkers = {};
+
+  // Load existing events and add to map
+  async function fetchEvents() {
+    try {
+      const response = await fetch("/events");
+      const eventsData = await response.json();
+      eventsData.forEach((ev) => {
+        addEventPin(ev);
+      });
+    } catch (error) {
+      console.error("Error fetching events:", error);
+    }
+  }
+
+  function addEventPin(ev) {
+    if (ev.lat == null || ev.lon == null) return;
+    const marker = L.marker([ev.lat, ev.lon]).addTo(map);
+    marker.bindPopup(
+      `<strong>${ev.name}</strong><br/>` +
+      `<em>${ev.type}</em><br/>` +
+      `Host: ${ev.host}<br/>` +
+      `Date: ${ev.date} at ${ev.time}<br/>` +
+      `Location: ${ev.location}<br/>` +
+      `${ev.description}`
+    );
+    eventMarkers[ev.name + "||" + ev.date] = marker;
+  }
+
+  fetchEvents();
+
+  // Location autocomplete using Nominatim
+  const locationInput = document.getElementById("event-location");
+  const suggestionsBox = document.getElementById("location-suggestions");
+  let selectedLat = null;
+  let selectedLon = null;
+  let debounceTimer = null;
+
+  locationInput.addEventListener("input", () => {
+    clearTimeout(debounceTimer);
+    const query = locationInput.value.trim();
+    if (query.length < 3) {
+      suggestionsBox.innerHTML = "";
+      suggestionsBox.classList.add("hidden");
+      selectedLat = null;
+      selectedLon = null;
+      return;
+    }
+    debounceTimer = setTimeout(async () => {
+      try {
+        const res = await fetch(
+          `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
+            query
+          )}&format=json&limit=5`,
+          {
+            headers: {
+              "Accept-Language": "en",
+              "User-Agent": "MergingtonHighSchool/1.0 (school activities app)",
+            },
+          }
+        );
+        const results = await res.json();
+        suggestionsBox.innerHTML = "";
+        if (results.length === 0) {
+          suggestionsBox.classList.add("hidden");
+          return;
+        }
+        results.forEach((place) => {
+          const li = document.createElement("li");
+          li.textContent = place.display_name;
+          li.addEventListener("click", () => {
+            locationInput.value = place.display_name;
+            selectedLat = parseFloat(place.lat);
+            selectedLon = parseFloat(place.lon);
+            suggestionsBox.innerHTML = "";
+            suggestionsBox.classList.add("hidden");
+          });
+          suggestionsBox.appendChild(li);
+        });
+        suggestionsBox.classList.remove("hidden");
+      } catch (err) {
+        console.error("Geocoding error:", err);
+      }
+    }, 400);
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!e.target.closest(".location-group")) {
+      suggestionsBox.innerHTML = "";
+      suggestionsBox.classList.add("hidden");
+    }
+  });
+
+  // Event form submission
+  const eventForm = document.getElementById("event-form");
+  const eventMessageDiv = document.getElementById("event-message");
+
+  eventForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const name = document.getElementById("event-name").value;
+    const host = document.getElementById("event-host").value;
+    const date = document.getElementById("event-date").value;
+    const time = document.getElementById("event-time").value;
+    const location = locationInput.value;
+    const type = document.getElementById("event-type").value;
+    const description = document.getElementById("event-description").value;
+
+    if (!selectedLat || !selectedLon) {
+      eventMessageDiv.textContent =
+        "Please select a location from the autocomplete suggestions.";
+      eventMessageDiv.className = "error";
+      eventMessageDiv.classList.remove("hidden");
+      setTimeout(() => eventMessageDiv.classList.add("hidden"), 5000);
+      return;
+    }
+
+    const payload = {
+      name,
+      host,
+      date,
+      time,
+      location,
+      type,
+      description,
+      lat: selectedLat,
+      lon: selectedLon,
+    };
+
+    try {
+      const response = await fetch("/events", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        eventMessageDiv.textContent = result.message;
+        eventMessageDiv.className = "success";
+        addEventPin(result.event);
+        map.setView([selectedLat, selectedLon], 14);
+        eventForm.reset();
+        selectedLat = null;
+        selectedLon = null;
+      } else {
+        eventMessageDiv.textContent =
+          result.detail || "Failed to create event.";
+        eventMessageDiv.className = "error";
+      }
+
+      eventMessageDiv.classList.remove("hidden");
+      setTimeout(() => eventMessageDiv.classList.add("hidden"), 5000);
+    } catch (error) {
+      eventMessageDiv.textContent = "Failed to create event. Please try again.";
+      eventMessageDiv.className = "error";
+      eventMessageDiv.classList.remove("hidden");
+      console.error("Error creating event:", error);
+    }
+  });
 });
