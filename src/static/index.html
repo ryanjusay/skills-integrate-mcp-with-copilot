@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Mergington High School Activities</title>
     <link rel="stylesheet" href="styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   </head>
   <body>
     <header>
@@ -40,6 +45,63 @@
         <div id="message" class="hidden"></div>
       </section>
     </main>
+
+    <section id="events-section">
+      <h3>Events Map</h3>
+      <div id="map"></div>
+
+      <div id="create-event-container">
+        <h4>Create New Event</h4>
+        <form id="event-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="event-name">Event Name:</label>
+              <input type="text" id="event-name" required placeholder="e.g. Science Fair" />
+            </div>
+            <div class="form-group">
+              <label for="event-host">Host:</label>
+              <input type="text" id="event-host" required placeholder="e.g. Ms. Johnson" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="event-date">Date:</label>
+              <input type="date" id="event-date" required />
+            </div>
+            <div class="form-group">
+              <label for="event-time">Time:</label>
+              <input type="time" id="event-time" required />
+            </div>
+          </div>
+          <div class="form-group location-group">
+            <label for="event-location">Location:</label>
+            <input type="text" id="event-location" required placeholder="Start typing an address..." autocomplete="off" />
+            <ul id="location-suggestions" class="hidden"></ul>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="event-type">Type:</label>
+              <select id="event-type" required>
+                <option value="">-- Select type --</option>
+                <option value="Academic">Academic</option>
+                <option value="Sports">Sports</option>
+                <option value="Arts">Arts</option>
+                <option value="Social">Social</option>
+                <option value="Science">Science</option>
+                <option value="Community">Community</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="event-description">Description:</label>
+            <textarea id="event-description" required placeholder="Describe the event..." rows="3"></textarea>
+          </div>
+          <button type="submit">Create Event</button>
+        </form>
+        <div id="event-message" class="hidden"></div>
+      </div>
+    </section>
 
     <footer>
       <p>&copy; 2026 Mergington High School</p>

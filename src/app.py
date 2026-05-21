@@ -8,6 +8,8 @@ for extracurricular activities at Mergington High School.
 from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse
+from pydantic import BaseModel
+from typing import Optional
 import os
 from pathlib import Path
 
@@ -77,6 +79,21 @@ activities = {
     }
 }
 
+# In-memory events database
+events = []
+
+
+class Event(BaseModel):
+    name: str
+    host: str
+    time: str
+    date: str
+    location: str
+    description: str
+    type: str
+    lat: Optional[float] = None
+    lon: Optional[float] = None
+
 
 @app.get("/")
 def root():
@@ -130,3 +147,16 @@ def unregister_from_activity(activity_name: str, email: str):
     # Remove student
     activity["participants"].remove(email)
     return {"message": f"Unregistered {email} from {activity_name}"}
+
+
+@app.get("/events")
+def get_events():
+    return events
+
+
+@app.post("/events")
+def create_event(event: Event):
+    """Create a new event"""
+    event_dict = event.model_dump()
+    events.append(event_dict)
+    return {"message": f"Event '{event.name}' created successfully", "event": event_dict}
