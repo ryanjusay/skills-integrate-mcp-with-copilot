@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (points.length === 0) {
       mapContainer.innerHTML =
-        "<p class='map-placeholder'>No map points to display.</p>";
+        "<p class=\"map-placeholder\" aria-live=\"polite\">No map points to display.</p>";
       return;
     }
 
@@ -300,11 +300,16 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         await fetchActivities(getCurrentFilters());
       },
-      () => {
-        showMessage(
-          "Unable to get your current location. Enter coordinates manually.",
-          "error"
-        );
+      (error) => {
+        let geolocationError = "Unable to get your current location. Enter coordinates manually.";
+        if (error.code === error.PERMISSION_DENIED) {
+          geolocationError = "Location access was denied. Enter coordinates manually.";
+        } else if (error.code === error.POSITION_UNAVAILABLE) {
+          geolocationError = "Location data is unavailable. Enter coordinates manually.";
+        } else if (error.code === error.TIMEOUT) {
+          geolocationError = "Location request timed out. Enter coordinates manually.";
+        }
+        showMessage(geolocationError, "error");
       }
     );
   });
