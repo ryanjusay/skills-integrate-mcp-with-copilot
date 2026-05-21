@@ -15,6 +15,29 @@
     <main>
       <section id="activities-container">
         <h3>Available Activities</h3>
+        <div id="location-controls">
+          <h4>Find Nearby Events</h4>
+          <div class="location-buttons">
+            <button id="use-current-location" type="button">Use Current Location</button>
+          </div>
+          <div class="form-group">
+            <label for="latitude">Latitude:</label>
+            <input type="number" id="latitude" step="any" placeholder="e.g. 47.6062" />
+          </div>
+          <div class="form-group">
+            <label for="longitude">Longitude:</label>
+            <input type="number" id="longitude" step="any" placeholder="e.g. -122.3321" />
+          </div>
+          <div class="form-group">
+            <label for="radius-km">Radius (km):</label>
+            <input type="number" id="radius-km" min="1" value="10" />
+          </div>
+          <div class="location-buttons">
+            <button id="find-nearby" type="button">Find Nearby Events</button>
+            <button id="show-all" type="button">Show All Events</button>
+          </div>
+        </div>
+        <div id="map" aria-label="Nearby events map"></div>
         <div id="activities-list">
           <!-- Activities will be loaded here -->
           <p>Loading activities...</p>
