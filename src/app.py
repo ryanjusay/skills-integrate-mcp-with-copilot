@@ -87,7 +87,7 @@ activities = {
     },
     "Debate Team": {
         "description": "Develop public speaking and argumentation skills",
-        "event_type": "Nightlife",
+        "event_type": "Academic",
         "map_location": {"x": 52, "y": 24},
         "schedule": "Fridays, 4:00 PM - 5:30 PM",
         "max_participants": 12,
