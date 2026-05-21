@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Mergington High School Activities</title>
     <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="leaflet/leaflet.css" />
   </head>
   <body>
     <header>
@@ -13,6 +14,17 @@
     </header>
 
     <main>
+      <section id="map-container">
+        <h3>Activities Map</h3>
+        <div id="legend">
+          <span class="legend-item"><span class="legend-dot academic"></span>Academic</span>
+          <span class="legend-item"><span class="legend-dot sports"></span>Sports</span>
+          <span class="legend-item"><span class="legend-dot nightlife"></span>Nightlife</span>
+          <span class="legend-item"><span class="legend-dot misc"></span>Misc</span>
+        </div>
+        <div id="activities-map"></div>
+      </section>
+
       <section id="activities-container">
         <h3>Available Activities</h3>
         <div id="activities-list">
@@ -45,6 +57,7 @@
       <p>&copy; 2026 Mergington High School</p>
     </footer>
 
+    <script src="leaflet/leaflet.js"></script>
     <script src="app.js"></script>
   </body>
 </html>
